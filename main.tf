@@ -1,5 +1,5 @@
 # IAM Role for the lambda function
-resource "aws_iam_role" "lambda-ecs-drain-role" {
+resource "aws_iam_role" "lambda_ecs_drain_role" {
   count = "${var.create}"
   name  = "${var.name}-lambda-ecs-drain-role"
 
@@ -21,14 +21,14 @@ EOF
 }
 
 # IAM Role AmazonEC2ContainerServiceRole policy attachment
-resource "aws_iam_role_policy_attachment" "amazon-ec2container-service-role" {
+resource "aws_iam_role_policy_attachment" "amazon_ec2container_service_role" {
   count      = "${var.create}"
-  role       = "${aws_iam_role.lambda-ecs-drain-role.id}"
+  role       = "${aws_iam_role.lambda_ecs_drain_role.id}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
 }
 
 # IAM Role policy for the handling of the lifecycle
-resource "aws_iam_role_policy" "lambda-drain-policy" {
+resource "aws_iam_role_policy" "lambda_drain_policy" {
   count = "${var.create}"
   name  = "${var.name}-lambda-drain-policy"
   role  = "${aws_iam_role.lambda-ecs-drain-role.name}"
@@ -66,7 +66,7 @@ EOF
 }
 
 # Publishing the lambda function
-resource "aws_lambda_function" "drain-lambda-function" {
+resource "aws_lambda_function" "drain_lambda_function" {
   count            = "${var.create}"
   filename         = "${path.module}/lambda.zip"
   source_code_hash = "${base64sha256(file("${path.module}/lambda.zip"))}"

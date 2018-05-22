@@ -31,7 +31,7 @@ resource "aws_iam_role_policy_attachment" "amazon_ec2container_service_role" {
 resource "aws_iam_role_policy" "lambda_drain_policy" {
   count = "${var.create}"
   name  = "${var.name}-lambda-drain-policy"
-  role  = "${aws_iam_role.lambda-ecs-drain-role.name}"
+  role  = "${aws_iam_role.lambda_ecs_drain_role.name}"
 
   policy = <<EOF
 {
@@ -71,7 +71,7 @@ resource "aws_lambda_function" "drain_lambda_function" {
   filename         = "${path.module}/lambda.zip"
   source_code_hash = "${base64sha256(file("${path.module}/lambda.zip"))}"
   function_name    = "${var.name}-lambda-ecs-drain"
-  role             = "${aws_iam_role.lambda-ecs-drain-role.arn}"
+  role             = "${aws_iam_role.lambda_ecs_drain_role.arn}"
   description      = "${var.name}-lambda-ecs-drain"
   handler          = "index.lambda_handler"
   runtime          = "python2.7"

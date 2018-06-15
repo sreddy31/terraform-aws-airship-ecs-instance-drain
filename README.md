@@ -2,7 +2,8 @@ This is a partly terraformed version of the AWS provided ECS Draining sample : h
 
 Blog article: https://aws.amazon.com/blogs/compute/how-to-automate-container-instance-draining-in-amazon-ecs/
 
-Diagram: https://s3.amazonaws.com/chrisb/Architecture.png
+Diagram: 
+![](https://s3.amazonaws.com/chrisb/Architecture.png)
 
 ## Usage
 

@@ -76,4 +76,8 @@ resource "aws_lambda_function" "drain_lambda_function" {
   handler          = "index.lambda_handler"
   runtime          = "python2.7"
   timeout          = "300"
+
+  lifecycle {
+    ignore_changes = ["filename", "last_modified"]
+  }
 }

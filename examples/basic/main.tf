@@ -1,9 +1,9 @@
 terraform {
-  required_version = "~> 0.11"
+  required_version = "~> 0.12"
 }
 
 provider "aws" {
-  region                      = "${var.region}"
+  region                      = var.region
   skip_get_ec2_platforms      = true
   skip_metadata_api_check     = true
   skip_region_validation      = true
@@ -13,6 +13,7 @@ provider "aws" {
 
 module "ecs_draining" {
   source = "../.."
-  name   = "${terraform.workspace}"
-  create = "${var.create}"
+  name   = terraform.workspace
+  create = var.create
 }
+

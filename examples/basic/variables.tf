@@ -1,6 +1,7 @@
-variable "name" {
+variable "region" {
+  description = "The AWS region to deploy in"
+  default     = "eu-west-1"
   type        = string
-  description = "A preferably short unique identifier for this module"
 }
 
 variable "create" {

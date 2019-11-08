@@ -1,0 +1,17 @@
+language: bash
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker pull hashicorp/terraform:light
+  - docker pull wata727/tflint:latest
+
+script:
+  - docker run --rm -v $(pwd):/data --workdir=/data -t hashicorp/terraform:light init -backend=false examples/basic
+  - docker run --rm -v $(pwd):/data --workdir=/data -t hashicorp/terraform:light validate examples/basic
+  - docker run --rm -v $(pwd):/data --workdir=/data -t hashicorp/terraform:light fmt -recursive -write=false -diff=true -check=true
+  - docker run --rm -v $(pwd):/data --workdir=/data -t hashicorp/terraform:light get
+  - docker run --rm -v $(pwd):/data --workdir=/data -t wata727/tflint:latest --error-with-issues

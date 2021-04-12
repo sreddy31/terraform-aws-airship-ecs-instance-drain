@@ -15,15 +15,15 @@ data "aws_iam_policy_document" "lambda_ecs_drain_role" {
 
 # IAM Role for the lambda function
 resource "aws_iam_role" "lambda_ecs_drain_role" {
-  count              = var.create ? 1 : 0
+  count              = "${var.create ? 1 : 0}"
   name               = "${var.name}-lambda-ecs-drain-role"
-  assume_role_policy = data.aws_iam_policy_document.lambda_ecs_drain_role.json
+  assume_role_policy = "${data.aws_iam_policy_document.lambda_ecs_drain_role.json}"
 }
 
 # IAM Role AmazonEC2ContainerServiceRole policy attachment
 resource "aws_iam_role_policy_attachment" "amazon_ec2container_service_role" {
-  count      = var.create ? 1 : 0
-  role       = aws_iam_role.lambda_ecs_drain_role[0].id
+  count      = "${var.create ? 1 : 0}"
+  role       = "${join("",aws_iam_role.lambda_ecs_drain_role.*.id)}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
 }
 
@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "lambda_drain_policy" {
 
 # IAM Role policy for the handling of the lifecycle
 resource "aws_iam_role_policy" "lambda_drain_policy" {
-  count  = var.create ? 1 : 0
+  count  = "${var.create ? 1 : 0}"
   name   = "${var.name}-lambda-drain-policy"
   role   = aws_iam_role.lambda_ecs_drain_role[0].name
   policy = data.aws_iam_policy_document.lambda_drain_policy.json
@@ -63,18 +63,17 @@ resource "aws_iam_role_policy" "lambda_drain_policy" {
 }
 
 data "null_data_source" "lambda_path" {
-   inputs {
-     filename = "${substr("${path.module}/lambda.zip", length(path.cwd) + 1, -1)}"
-   }
- }
+  inputs {
+    filename = "${substr("${path.module}/lambda.zip", length(path.cwd) + 1, -1)}"
+  }
+}
 
 # Publishing the lambda function
 resource "aws_lambda_function" "drain_lambda_function" {
-  count            = var.create ? 1 : 0
-  filename         = {data.null_data_source.lambda_path.outputs.filename
-  source_code_hash = filebase64sha256("${path.module}/lambda.zip")
+  filename         = "${data.null_data_source.lambda_path.outputs.filename}"
+  source_code_hash = "${filebase64sha256("${path.module}/lambda.zip")}"
   function_name    = "${var.name}-lambda-ecs-drain"
-  role             = aws_iam_role.lambda_ecs_drain_role[0].arn
+  role             = "${aws_iam_role.lambda_ecs_drain_role[0].arn}"
   description      = "${var.name}-lambda-ecs-drain"
   handler          = "index.lambda_handler"
   runtime          = "python3.8"

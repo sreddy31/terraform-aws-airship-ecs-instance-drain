@@ -74,7 +74,7 @@ resource "aws_lambda_function" "drain_lambda_function" {
   role             = "${aws_iam_role.lambda_ecs_drain_role.arn}"
   description      = "${var.name}-lambda-ecs-drain"
   handler          = "index.lambda_handler"
-  runtime          = "python2.7"
+  runtime          = "python3.6"
   timeout          = "300"
 
   lifecycle {
